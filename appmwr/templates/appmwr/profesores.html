@@ -1,0 +1,14 @@
+{% extends "appmwr/base.html" %}
+
+{% block titulo%} Academia de Padel Club Progreso | Profesores {%endblock%}
+
+{% block contenidoQueCambia%}
+
+<h1> Aca estaran listados todas las profesores</h1>
+
+{% for profesor in profesores %}
+
+{{profesor.nombre}} {{profesor.apellido}} -- {{profesor.nivel}}
+
+{% endfor %}
+{% endblock%}
