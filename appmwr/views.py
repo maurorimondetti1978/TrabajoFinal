@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Clase, Profesor, Alumno
 from .forms import AlumnoFormulario, ClaseFormulario, ProfesorFormulario
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth.decorators import login_required
+
 
 def inicio(request):
     return render(request, "appmwr/inicio.html")
@@ -21,6 +26,31 @@ def profesores(request):
     profesores=Profesor.objects.all()
 
     return render(request, "appmwr/profesores.html", {"profesores":profesores})
+
+def busquedaNivel(request):
+
+    return render(request, 'appmwr/busquedaNivel.html')
+
+def buscar(request):
+
+    respuesta= f" Estoy buscando el niverl: {request.GET['nivel']}"
+
+    return HttpResponse(respuesta)
+
+def buscar(request):
+    if request.GET["nivel"]:
+
+        nivel= request.GET['nivel']
+        dias= Clase.objects.filter(nivel__icontains=nivel)
+
+        return render(request, 'appmwr/resultadosBusqueda.html', {'dias':dias, 'nivel':nivel})
+    
+    else:
+
+        respuesta= "No enviaste datos"
+
+    return HttpResponse(respuesta)
+
 
 def claseFormulario(request):
 
@@ -94,6 +124,57 @@ def profesorFormulario(request):
         mi_formulario = ProfesorFormulario()
 
     return render(request, "appmwr/profesorFormulario.html", {"mi_formulario": mi_formulario})
+
+def login_request(request):
+
+    if request.method == "POST":
+        form = AuthenticationForm(request, data = request.POST)
+
+        if form.is_valid():
+            usuario = form.cleaned_data.get('username')
+            contra = form.cleaned_data.get('password')
+
+            user = authenticate(username=usuario, password=contra)
+
+            if user is not None:
+                login(request, user)
+
+                return render(request, "appmwr/inicio.html", {"mensaje":f"Bienvenido {usuario}"})
+            else:
+
+                return render(request, "appmwr/inicio.html", {"mensaje":"Error, datos incorrectos"})
+        
+        else:
+
+                return render(request,"appmwrinicio.html" , {"mensaje": "Error, formulario erroneo"})
+
+    form = AuthenticationForm()
+
+    return render(request, "appmwr/login.html", {'form':form})
+
+def register(request):
+
+    if request.method == 'POST':
+
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+
+            username= form.cleaned_data['username']
+            form.save()
+            return render(request, "appmwr/inicio.html", {"mensaje": "Usuario Creado:)"})
+        
+    else:
+        form= UserCreationForm()
+
+    return render(request, "appmwr/registro.html" , {"form": form})
+
+@login_required
+def inicio(request):
+    return render(request, "appmwr/inicio.html")
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 from django.urls import path
 from appmwr.views import *
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path("", inicio, name="inicio"),
@@ -9,4 +10,9 @@ urlpatterns = [
     path('alumnoFormulario', alumnoFormulario, name= "alumnoformulario"), 
     path('claseFormulario', claseFormulario, name= "claseformulario"), 
     path('profesorFormulario', profesorFormulario, name= "profesorformulario"), 
+    path('busquedaNivel', busquedaNivel, name= "busquedaNivel"),
+    path('buscar/', buscar),
+    path('login', login_request, name="Login"),  
+    path('register', register, name="Register"),
+    path('logout', LogoutView.as_view(template_name='appmwr/logout.html'), name = 'Logout'),
 ]
