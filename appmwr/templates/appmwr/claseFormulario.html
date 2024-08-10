@@ -1,0 +1,16 @@
+{% extends 'appmwr/base.html' %}
+
+{% load static%}
+
+{% block title %} Formulario - Agregar Alumno {% endblock title%}
+
+{% block contenidoQueCambia %}
+
+    <form action= "" method="POST"> {% csrf_token%}
+        <p> Nivel: <input type="text" name="nivel" <p>
+        <p> Dias: <input type="text" name="dias" <p>   
+        <input type="submit" value="Enviar">
+
+    <form>
+
+{% endblock %}

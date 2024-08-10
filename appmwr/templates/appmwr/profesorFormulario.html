@@ -1,0 +1,17 @@
+{% extends 'appmwr/base.html' %}
+
+{% load static%}
+
+{% block title %} Formulario - Agregar Profesor {% endblock title%}
+
+{% block contenidoQueCambia %}
+
+    <form action= "" method="POST"> {% csrf_token%}
+        <p> Nombre: <input type="text" name="nombre" <p>
+        <p> Apellido: <input type="text" name="apellido" <p>
+        <p> Nivel: <input type="text" name="nivel" <p>   
+        <input type="submit" value="Enviar">
+
+    <form>
+
+{% endblock %}
