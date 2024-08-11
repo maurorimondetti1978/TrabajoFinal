@@ -23,13 +23,17 @@
         <!-- Navigation-->
         <nav class="navbar navbar-light bg-ligth static-top">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'inicio' %}">Inicio</a>
-                <a class="navbar-brand" href="{% url 'clases' %}">Clases</a>
-                <a class="navbar-brand" href="{% url 'alumnos' %}">Alumnos</a>
-                <a class="navbar-brand" href="{% url 'profesores' %}">Profesores</a>
-                <a class="btn btn-primary" href="{% url 'Login' %}">Login</a>
-                <a class="btn btn-primary" href="{% url 'Register' %}">Register</a>
-                <a class="btn btn-primary" href="{% url 'Logout' %}">Logout</a>
+                <ul class="navbar-nav ms-autoo"> </ul>
+                    <a class="navbar-brand" href="{% url 'inicio' %}">Inicio</a>
+                     <a class="navbar-brand" href="{% url 'clases' %}">Clases</a>
+                    <a class="navbar-brand" href="{% url 'alumnos' %}">Alumnos</a>
+                    <a class="navbar-brand" href="{% url 'profesores' %}">Profesores</a>
+                </ul>  
+                
+                    <a class="btn btn-primary" href="{% url 'Login' %}">Login</a>
+                    <a class="btn btn-primary" href="{% url 'Register' %}">Register</a>
+                    <a class="btn btn-primary" href="{% url 'Logout' %}">Logout</a>
+                
                 
                 
             </div>

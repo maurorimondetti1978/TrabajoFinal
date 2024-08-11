@@ -8,6 +8,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
 
 
+
 def inicio(request):
     return render(request, "appmwr/inicio.html")
 
@@ -43,7 +44,7 @@ def buscar(request):
         nivel= request.GET['nivel']
         dias= Clase.objects.filter(nivel__icontains=nivel)
 
-        return render(request, 'appmwr/resultadosBusqueda.html', {'dias':dias, 'nivel':nivel})
+        return render(request, 'appmwr/resultadosBusqueda.html', {'nivel':nivel, 'dias':dias})
     
     else:
 
@@ -126,7 +127,7 @@ def profesorFormulario(request):
     return render(request, "appmwr/profesorFormulario.html", {"mi_formulario": mi_formulario})
 
 def login_request(request):
-
+    msg_login=""
     if request.method == "POST":
         form = AuthenticationForm(request, data = request.POST)
 
@@ -139,21 +140,18 @@ def login_request(request):
             if user is not None:
                 login(request, user)
 
-                return render(request, "appmwr/inicio.html", {"mensaje":f"Bienvenido {usuario}"})
-            else:
-
-                return render(request, "appmwr/inicio.html", {"mensaje":"Error, datos incorrectos"})
+                return render(request, "appmwr/inicio.html")
+            
+        msg_login = "Usuario o contraseña incorrectos"
         
-        else:
-
-                return render(request,"appmwrinicio.html" , {"mensaje": "Error, formulario erroneo"})
 
     form = AuthenticationForm()
 
-    return render(request, "appmwr/login.html", {'form':form})
+    return render(request, "appmwr/login.html", {'form':form, "msg_login": msg_login})
 
 def register(request):
 
+    msg_register=""
     if request.method == 'POST':
 
         form = UserCreationForm(request.POST)
@@ -167,7 +165,7 @@ def register(request):
     else:
         form= UserCreationForm()
 
-    return render(request, "appmwr/registro.html" , {"form": form})
+    return render(request, "appmwr/registro.html" , {"form": form, "msg_register": msg_register})
 
 @login_required
 def inicio(request):

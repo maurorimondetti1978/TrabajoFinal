@@ -13,6 +13,9 @@
     <title>Document</title>
 </head>
 <body>
+
+    <p class="fs-5 fw-bold">{{masg_login}}</p>
+
     <form action="" method="POST">
         {% csrf_token %}
         {{form.as_p}}
