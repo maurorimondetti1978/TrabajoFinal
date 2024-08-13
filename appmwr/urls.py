@@ -14,5 +14,7 @@ urlpatterns = [
     path('buscar/', buscar),
     path('login', login_request, name="Login"),  
     path('register', register, name="Register"),
-    path('logout', LogoutView.as_view(template_name='appmwr/logout.html'), name = 'Logout'),
+    path('logout', LogoutView.as_view(template_name='logout.html'), name = 'Logout'),
+    path('editarperfil', editarPerfil, name="EditarPerfil"),
+    path('cambiarcontrasenia', CambiarContrasenia.as_view(), name="CambiarContrasenia"),
 ]

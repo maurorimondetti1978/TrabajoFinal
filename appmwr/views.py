@@ -6,7 +6,10 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
-
+from .forms import UserRegisterForm, UserEditForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 
 
 def inicio(request):
@@ -44,7 +47,7 @@ def buscar(request):
         nivel= request.GET['nivel']
         dias= Clase.objects.filter(nivel__icontains=nivel)
 
-        return render(request, 'appmwr/resultadosBusqueda.html', {'nivel':nivel, 'dias':dias})
+        return render(request, 'appmwr/resultadosPorBusquedaNivel.html', {'dias':dias,'nivel':nivel})
     
     else:
 
@@ -127,7 +130,7 @@ def profesorFormulario(request):
     return render(request, "appmwr/profesorFormulario.html", {"mi_formulario": mi_formulario})
 
 def login_request(request):
-    msg_login=""
+    
     if request.method == "POST":
         form = AuthenticationForm(request, data = request.POST)
 
@@ -140,18 +143,22 @@ def login_request(request):
             if user is not None:
                 login(request, user)
 
-                return render(request, "appmwr/inicio.html")
-            
-        msg_login = "Usuario o contraseña incorrectos"
+                return render(request, "appmwr/inicio.html", {"mensaje": f"Bienvenido {usuario}"} )
+            else:
+                return render(request, "appmwr/inicio.html", {"mensaje": "Error, datos incorrectos"})
+        
+        else:
+
+                return render(request, "appmwr/inicio.html", {"mensaje": "Error, formulario erroneo"})
         
 
     form = AuthenticationForm()
 
-    return render(request, "appmwr/login.html", {'form':form, "msg_login": msg_login})
+    return render(request, "appmwr/login.html", {'form':form})
 
 def register(request):
 
-    msg_register=""
+    
     if request.method == 'POST':
 
         form = UserCreationForm(request.POST)
@@ -165,12 +172,53 @@ def register(request):
     else:
         form= UserCreationForm()
 
-    return render(request, "appmwr/registro.html" , {"form": form, "msg_register": msg_register})
+    return render(request, "appmwr/registro.html" , {"form": form})
+
+def register(request):
+
+    
+    if request.method == 'POST':
+
+        form = UserRegisterForm(request.POST)
+
+        if form.is_valid():
+
+            username= form.cleaned_data['username']
+            form.save()
+            return render(request, "appmwr/inicio.html", {"mensaje": "Usuario Creado:)"})
+        
+    else:
+        form= UserRegisterForm()
+
+    return render(request, "appmwr/registro.html" , {"form": form})
+
 
 @login_required
 def inicio(request):
     return render(request, "appmwr/inicio.html")
 
+@login_required
+def editarPerfil(request):
+    
+    usuario= request.user
+
+    if request.method == "POST":
+        
+        miFormulario= UserEditForm(request.POST, instance=request.user)
+
+        if miFormulario.is_valid():
+            miFormulario.save()
+
+            return render(request, "appmsr/inicio.html")
+    
+    else:
+        miFormulario = UserEditForm(instance=request.user)
+
+    return render(request, "appmwr/editar_perfil.html", {"miFormulario": miFormulario, "usuario": usuario})
+
+class CambiarContrasenia(LoginRequiredMixin, PasswordChangeView):
+    template_name = 'appmwr/cambiarcontrasenia.html'
+    success_url = reverse_lazy ('EditarPerfil')
 
 
 
