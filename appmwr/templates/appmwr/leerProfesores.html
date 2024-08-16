@@ -1,0 +1,20 @@
+{% extends "appmwr/base.html" %}
+
+{% block titulo%} Academia de Padel Club Progreso | Profesores {%endblock%}
+
+{% block contenidoQueCambia%}
+
+<h1> Aca estaran listados todas las profesores</h1>
+
+<h1 style="color:crimson; font-size: 40px;"{% for p in profesores %} <h1 style="color:crimson; font-size: 40px;" </h1>
+
+    <li> {{p}}</li>
+    <button>  
+    <a href="{% url 'EliminarProfesor' p.nombre%}">Eliminar</a>
+    <a href="{% url 'EditarProfesor' p.nombre%}">Editar</a>
+    </button>
+    {% endfor %}
+    
+    
+    {% endblock%}
+

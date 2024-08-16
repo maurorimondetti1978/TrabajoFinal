@@ -1,0 +1,21 @@
+{% extends "appmwr/base.html" %}
+{% block titulo%} Academia de Padel Club Progreso | Editar Clases {%endblock%}
+{% block contenidoQueCambia%}
+<body>
+    <form action=""method="post"> {% csrf_token%}
+            <p> Nivel: <input type="text" name="nivel" <p>
+            <p> Dias: <input type="text" name="dias" <p>   
+            <input type="submit" value="Enviar">
+        
+    </form>
+
+    <button>  
+        <a href="{% url 'clases' %}">Agregar Otra Clase</a>
+    
+    </button>
+    
+</body>
+
+</html>
+
+{% endblock%}

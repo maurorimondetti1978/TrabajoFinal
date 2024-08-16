@@ -16,12 +16,13 @@
 
     <p class="fs-5 fw-bold">{{masg_login}}</p>
 
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
-        <button type=" submit" vaulue ="Actualizar"> 
+        <input type=" submit" vaulue ="Actualizar"> 
+
     </form>
     
 </body>

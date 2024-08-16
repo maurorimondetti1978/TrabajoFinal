@@ -21,16 +21,154 @@ def clases(request):
 
     return render(request,"appmwr/clases.html", {"clases":clases})
 
+   
 
 def alumnos(request):
-    return render(request, "appmwr/alumnos.html")
+    
+    alumnos=Alumno.objects.all()
+
+    return render(request,"appmwr/alumnos.html", {"alumnos":alumnos})
+
 
 def profesores(request):
 
     profesores=Profesor.objects.all()
 
-    return render(request, "appmwr/profesores.html", {"profesores":profesores})
+    return render(request,"appmwr/profesores.html", {"profesores":profesores})
 
+
+def leerClases(request):
+
+    clases=Clase.objects.all()
+
+    return render(request, "appmwr/leerclases.html", {"clases":clases})
+
+
+def leerProfesores(request):
+
+    profesores=Profesor.objects.all()
+
+    return render(request, "appmwr/leerprofesores.html", {"profesores":profesores})
+
+def leerAlumnos(request):
+
+    alumnos=Alumno.objects.all()
+
+    return render(request, "appmwr/leeralumnos.html", {"alumnos":alumnos})
+
+
+def eliminarClases(request, clase_nivel):
+
+    clase=Clase.objects.get(nivel=clase_nivel)
+    clase.delete()
+
+    clases= Clase.objects.all()
+
+    return render(request, "appmwr/leerclases.html", {"clases":clases})
+
+def eliminarAlumnos(request, alumno_nombre):
+
+    alumno=Alumno.objects.get(nombre=alumno_nombre)
+    alumno.delete()
+
+    alumnos= Alumno.objects.all()
+
+    return render(request, "appmwr/leeralumnos.html", {"alumnos":alumnos})
+
+def eliminarProfesores(request, profesor_nombre):
+
+    profesor=Profesor.objects.get(nombre=profesor_nombre)
+    profesor.delete()
+
+    profesores= Profesor.objects.all()
+
+    return render(request, "appmwr/leerprofesores.html", {"profesores":profesores})
+
+def editarClases(request, clase_nivel):
+
+    clase=Clase.objects.get(nivel=clase_nivel)
+
+    if request.method == 'POST':
+
+        miFormulario= ClaseFormulario(request.POST)
+        
+        print(miFormulario)
+
+        if miFormulario.is_valid:
+
+            informacion= miFormulario.cleaned_data
+
+            clase.nivel=informacion['nivel']
+            clase.dias=informacion['dias']
+
+            clase.save()
+
+            return render(request, "appmwr/inicio.html")
+
+   
+    else:
+        mi_formulario = ProfesorFormulario(initial={'nivel': clase.nivel, 'dias':clase.dias})
+
+    return render(request, "appmwr/editarClases.html", {"mi_formulario": mi_formulario, "clase_nivel":clase_nivel})
+
+def editarAlumnos(request, alumno_nombre):
+
+    alumno=Alumno.objects.get(nombre=alumno_nombre)
+
+    if request.method == 'POST':
+
+        miFormulario= AlumnoFormulario(request.POST)
+        
+        print(miFormulario)
+
+        if miFormulario.is_valid:
+
+            informacion= miFormulario.cleaned_data
+
+            alumno.nombre=informacion['nombre']
+            alumno.apellido=informacion['apellido']
+            alumno.email=informacion['email']
+           
+
+            alumno.save()
+
+            return render(request, "appmwr/inicio.html")
+
+   
+    else:
+        mi_formulario = AlumnoFormulario(initial={'nombre': alumno.nombre, 'apellido':alumno.apellido, 'email':alumno.email})
+
+    return render(request, "appmwr/editarAlumnos.html", {"mi_formulario": mi_formulario, "alumno_nombre":alumno_nombre})
+
+
+def editarProfesor(request, profesor_id):
+
+    profesor=Profesor.objects.get(nombre=profesor_id)
+
+    if request.method == 'POST':
+
+        miFormulario= ProfesorFormulario(request.POST)
+        
+        print(miFormulario)
+
+        if miFormulario.is_valid:
+
+            informacion= miFormulario.cleaned_data
+
+            profesor.nombre=informacion['nombre']
+            profesor.apellido=informacion['apellido']
+            profesor.nivel=informacion['nivel']
+
+            profesor.save()
+
+            return render(request, "appmwr/inicio.html")
+
+   
+    else:
+        mi_formulario = ProfesorFormulario(initial={'nombre': profesor.nombre, 'apellido':profesor.apellido, 'nivel':profesor.nivel})
+
+    return render(request, "appmwr/editarProfesor.html", {"mi_formulario": mi_formulario, "profesor_id":profesor_id})
+    
 def busquedaNivel(request):
 
     return render(request, 'appmwr/busquedaNivel.html')
@@ -45,9 +183,9 @@ def buscar(request):
     if request.GET["nivel"]:
 
         nivel= request.GET['nivel']
-        dias= Clase.objects.filter(nivel__icontains=nivel)
+        clases= Clase.objects.filter(nivel__icontains=nivel)
 
-        return render(request, 'appmwr/resultadosPorBusquedaNivel.html', {'dias':dias,'nivel':nivel})
+        return render(request, 'appmwr/resultadoPorBusquedaNivel.html', {'dias':clases,'nivel':nivel})
     
     else:
 
@@ -136,9 +274,9 @@ def login_request(request):
 
         if form.is_valid():
             usuario = form.cleaned_data.get('username')
-            contra = form.cleaned_data.get('password')
+            contrasenia = form.cleaned_data.get('password')
 
-            user = authenticate(username=usuario, password=contra)
+            user = authenticate(username=usuario, password=contrasenia)
 
             if user is not None:
                 login(request, user)
@@ -204,17 +342,22 @@ def editarPerfil(request):
 
     if request.method == "POST":
         
-        miFormulario= UserEditForm(request.POST, instance=request.user)
+        miFormulario= UserEditForm(request.POST, request.FILES, instance=request.user)
 
         if miFormulario.is_valid():
+
+            if miFormulario.cleaned_data.get('imagen'):
+                usuario.avatar.imagen=miFormulario.cleaned_data.get('imagen')
+                usuario.avatar.save()
+
             miFormulario.save()
 
             return render(request, "appmsr/inicio.html")
     
     else:
-        miFormulario = UserEditForm(instance=request.user)
+        miFormulario = UserEditForm(initial={'imagen': usuario.avatar.imagen},instance=request.user)
 
-    return render(request, "appmwr/editar_perfil.html", {"miFormulario": miFormulario, "usuario": usuario})
+    return render(request, "appmwr/editarPerfil.html", {"miFormulario": miFormulario, "usuario": usuario})
 
 class CambiarContrasenia(LoginRequiredMixin, PasswordChangeView):
     template_name = 'appmwr/cambiarcontrasenia.html'

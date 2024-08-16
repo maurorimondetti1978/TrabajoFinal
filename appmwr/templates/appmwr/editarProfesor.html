@@ -1,0 +1,18 @@
+
+
+
+<body>
+    <form action=""method="post"> {% csrf_token%}
+        {{miFormulario}}
+        <input type="submit" value="Modificar Profesor">
+        
+    </form>
+
+    <button>  
+        <a href="{% url 'profesores' %}">Agregar Otro Profesor</a>
+    
+    </button>
+    
+</body>
+
+</html>

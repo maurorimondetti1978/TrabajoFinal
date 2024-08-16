@@ -1,0 +1,19 @@
+
+<body>
+    <form action=""method="post"> {% csrf_token%}
+        <p> Nombre: <input type="text" name="nombre" <p>
+        <p> Apellido: <input type="text" name="apellido" <p>
+        <p> Email: <input type="text" name="email" <p>  
+        
+        <input type="submit" value="Modificar Alumno">
+        
+    </form>
+
+    <button>  
+        <a href="{% url 'alumnos' %}">Agregar Otro Alumno</a>
+    
+    </button>
+    
+</body>
+
+</html>

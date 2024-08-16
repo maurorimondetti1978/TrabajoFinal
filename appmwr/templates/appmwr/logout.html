@@ -13,8 +13,10 @@
     <title>Logoutt</title>
 </head>
 <body>
-    
-        <h1> Te has delogueado .....</h1>
+        <form method="POST"action="{% url 'Logout'}">
+            {% csrf_token %}
+            <button type="submit"></button>
+        </form>    
     
 </body>
 </html>

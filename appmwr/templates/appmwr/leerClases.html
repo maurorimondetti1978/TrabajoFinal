@@ -1,0 +1,18 @@
+{% extends "appmwr/base.html" %}
+
+{% block titulo%} Academia de Padel Club Progreso | Clases {%endblock%}
+
+{% block contenidoQueCambia%}
+
+<h1> Aca estaran listados todas las clases</h1>
+
+<h1 style="color:crimson; font-size: 40px;"{% for p in clases %} <h1 style="color:crimson; font-size: 40px;" </h1>
+
+    <li> {{p}}</li>
+    <button>  
+    <a href="{% url 'EliminarClases' p.nivel%}">Eliminar</a>
+    <a href="{% url 'EditarClases' p.nivel%}">Editar</a>
+    </button>
+    {% endfor %}
+    
+    {% endblock%}

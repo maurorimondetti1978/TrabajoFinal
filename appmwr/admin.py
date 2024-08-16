@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Clase, Profesor, Alumno
+from .models import *
 # Register your models here.
 
 class ClaseAdmin(admin.ModelAdmin):
@@ -19,3 +19,4 @@ class ProfesorAdmin(admin.ModelAdmin):
 admin.site.register(Clase, ClaseAdmin)
 admin.site.register(Profesor)
 admin.site.register(Alumno)
+admin.site.register(Avatar)
